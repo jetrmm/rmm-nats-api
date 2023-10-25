@@ -15,8 +15,8 @@ import (
 
 func setupNatsOptions(key string) []nats.Option {
 	opts := []nats.Option{
-		nats.Name("TacticalRMM"),
-		nats.UserInfo("tacticalrmm", key),
+		nats.Name("JetRMM"),
+		nats.UserInfo("jetrmm", key),
 		nats.ReconnectWait(time.Second * 2),
 		nats.RetryOnFailedConnect(true),
 		nats.MaxReconnects(-1),
@@ -27,7 +27,7 @@ func setupNatsOptions(key string) []nats.Option {
 
 func GetConfig(cfg string) (db *sqlx.DB, r DjangoConfig, err error) {
 	if cfg == "" {
-		cfg = "/rmm/api/tacticalrmm/nats-api.conf"
+		cfg = "nats-api.conf"
 		if !trmm.FileExists(cfg) {
 			err = errors.New("unable to find config file")
 			return
