@@ -1,7 +1,5 @@
 package main
 
-// env CGO_ENABLED=0 go build -ldflags "-s -w" -o nats-api
-
 import (
 	"flag"
 	"fmt"
@@ -17,8 +15,8 @@ var (
 
 func main() {
 	ver := flag.Bool("version", false, "Prints version")
-	cfg := flag.String("config", "", "Path to config file")
-	logLevel := flag.String("log", "INFO", "The log level")
+	cfg := flag.String("config", "", "Path to the configuration file")
+	logLevel := flag.String("log", "INFO", "The logging level")
 	flag.Parse()
 
 	if *ver {

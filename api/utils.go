@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"time"
 
-	trmm "github.com/jetrmm/rmm-shared"
+	rmm "github.com/jetrmm/rmm-shared"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	nats "github.com/nats-io/nats.go"
@@ -25,10 +25,10 @@ func setupNatsOptions(key string) []nats.Option {
 	return opts
 }
 
-func GetConfig(cfg string) (db *sqlx.DB, r DjangoConfig, err error) {
+func GetConfig(cfg string) (db *sqlx.DB, r WebConfig, err error) {
 	if cfg == "" {
 		cfg = "nats-api.conf"
-		if !trmm.FileExists(cfg) {
+		if !rmm.FileExists(cfg) {
 			err = errors.New("unable to find config file")
 			return
 		}

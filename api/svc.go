@@ -6,8 +6,9 @@ import (
 	"runtime"
 	"time"
 
-	trmm "github.com/jetrmm/rmm-shared"
-	_ "github.com/lib/pq"
+	rmm "github.com/jetrmm/rmm-shared"
+	// _ "github.com/lib/pq"
+	_ "github.com/go-sql-driver/mysql"
 	nats "github.com/nats-io/nats.go"
 	"github.com/sirupsen/logrus"
 	"github.com/ugorji/go/codec"
@@ -21,7 +22,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 	}
 
 	opts := setupNatsOptions(r.Key)
-	nc, err := nats.Connect(r.NatsURL, opts...)
+	nc, err := nats.Connect(r.RpcUrl, opts...)
 	if err != nil {
 		logger.Fatalln(err)
 	}
@@ -35,7 +36,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 		switch msg.Reply {
 		case "agent-hello":
 			go func() {
-				var p trmm.CheckInNats
+				var p rmm.CheckInNats
 				if err := dec.Decode(&p); err == nil {
 					loc, _ := time.LoadLocation("UTC")
 					now := time.Now().In(loc)
@@ -55,7 +56,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 
 		case "agent-publicip":
 			go func() {
-				var p trmm.PublicIPNats
+				var p rmm.PublicIPNats
 				if err := dec.Decode(&p); err == nil {
 					logger.Debugln("Public IP", p)
 					stmt := `
@@ -69,7 +70,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 
 		case "agent-agentinfo":
 			go func() {
-				var r trmm.AgentInfoNats
+				var r rmm.AgentInfoNats
 				if err := dec.Decode(&r); err == nil {
 					stmt := `
 						UPDATE agents_agent
@@ -96,9 +97,9 @@ func Svc(logger *logrus.Logger, cfg string) {
 
 		case "agent-disks":
 			go func() {
-				var r trmm.WinDisksNats
+				var r rmm.WinDisksNats
 				if err := dec.Decode(&r); err == nil {
-					logger.Debugln("Disks", r)
+					logger.Debugln("Drives", r)
 					b, err := json.Marshal(r.Drives)
 					if err != nil {
 						logger.Errorln(err)
@@ -116,7 +117,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 
 		case "agent-winsvc":
 			go func() {
-				var r trmm.WinSvcNats
+				var r rmm.WinSvcNats
 				if err := dec.Decode(&r); err == nil {
 					logger.Debugln("WinSvc", r)
 					b, err := json.Marshal(r.WinSvcs)
@@ -137,7 +138,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 
 		case "agent-wmi":
 			go func() {
-				var r trmm.WinWMINats
+				var r rmm.WinWMINats
 				if err := dec.Decode(&r); err == nil {
 					logger.Debugln("WMI", r)
 					b, err := json.Marshal(r.WMI)
