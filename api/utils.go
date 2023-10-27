@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"time"
 
-	rmm "github.com/jetrmm/rmm-shared"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	nats "github.com/nats-io/nats.go"
@@ -28,7 +28,7 @@ func setupNatsOptions(key string) []nats.Option {
 func GetConfig(cfg string) (db *sqlx.DB, r WebConfig, err error) {
 	if cfg == "" {
 		cfg = "nats-api.conf"
-		if !rmm.FileExists(cfg) {
+		if !FileExists(cfg) {
 			err = errors.New("unable to find config file")
 			return
 		}
@@ -50,4 +50,13 @@ func GetConfig(cfg string) (db *sqlx.DB, r WebConfig, err error) {
 	}
 	db.SetMaxOpenConns(20)
 	return
+}
+
+func FileExists(path string) bool {
+	if _, err := os.Stat(path); err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+	}
+	return true
 }

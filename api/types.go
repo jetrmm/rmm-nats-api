@@ -1,9 +1,9 @@
 package api
 
-type Agent struct {
+/*type Agent struct {
 	ID      int    `db:"id"`
 	AgentID string `db:"agent_id"`
-}
+}*/
 
 type WebConfig struct {
 	Key    string `json:"key"`
