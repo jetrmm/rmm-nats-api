@@ -36,15 +36,15 @@ func Svc(logger *logrus.Logger, cfg string) {
 		switch msg.Reply {
 		case "agent-hello":
 			go func() {
-				var p rmm.CheckInNats
+				var p rmm.AgentHeaderNats
 				if err := dec.Decode(&p); err == nil {
 					loc, _ := time.LoadLocation("UTC")
 					now := time.Now().In(loc)
 					logger.Debugln("Hello", p, now)
 					stmt := `
-					UPDATE agents_agent
+					UPDATE agents
 					SET last_seen=$1, version=$2
-					WHERE agents_agent.agent_id=$3;
+					WHERE agents.agent_id=$3;
 					`
 
 					_, err = db.Exec(stmt, now, p.Version, p.AgentId)
