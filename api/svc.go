@@ -60,7 +60,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 				if err := dec.Decode(&p); err == nil {
 					logger.Debugln("Public IP", p)
 					stmt := `
-					UPDATE agents_agent SET public_ip=$1 WHERE agents_agent.agent_id=$2;`
+					UPDATE agents SET public_ip=$1 WHERE agents_agent.agent_id=$2;`
 					_, err = db.Exec(stmt, p.PublicIP, p.AgentId)
 					if err != nil {
 						logger.Errorln(err)
@@ -73,7 +73,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 				var r rmm.AgentInfoNats
 				if err := dec.Decode(&r); err == nil {
 					stmt := `
-						UPDATE agents_agent
+						UPDATE agents
 						SET hostname=$1, operating_system=$2,
 						plat=$3, total_ram=$4, boot_time=$5, needs_reboot=$6, logged_in_username=$7
 						WHERE agents_agent.agent_id=$8;`
@@ -85,7 +85,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 					}
 
 					if r.Username != "None" {
-						stmt = `UPDATE agents_agent SET last_logged_in_user=$1 WHERE agents_agent.agent_id=$2;`
+						stmt = `UPDATE agents SET last_logged_in_user=$1 WHERE agents_agent.agent_id=$2;`
 						logger.Debugln("Updating last logged in user:", r.Username)
 						_, err = db.Exec(stmt, r.Username, r.AgentId)
 						if err != nil {
@@ -106,7 +106,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 						return
 					}
 					stmt := `
-					UPDATE agents_agent SET disks=$1 WHERE agents_agent.agent_id=$2;`
+					UPDATE agents SET disks=$1 WHERE agents_agent.agent_id=$2;`
 
 					_, err = db.Exec(stmt, b, r.AgentId)
 					if err != nil {
@@ -127,7 +127,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 					}
 
 					stmt := `
-					UPDATE agents_agent SET services=$1 WHERE agents_agent.agent_id=$2;`
+					UPDATE agents SET services=$1 WHERE agents_agent.agent_id=$2;`
 
 					_, err = db.Exec(stmt, b, r.AgentId)
 					if err != nil {
@@ -147,7 +147,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 						return
 					}
 					stmt := `
-					UPDATE agents_agent SET wmi_detail=$1 WHERE agents_agent.agent_id=$2;`
+					UPDATE agents SET wmi_detail=$1 WHERE agents_agent.agent_id=$2;`
 
 					_, err = db.Exec(stmt, b, r.AgentId)
 					if err != nil {
