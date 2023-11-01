@@ -9,7 +9,8 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
+	// _ "github.com/lib/pq"
+	_ "github.com/go-sql-driver/mysql"
 	nats "github.com/nats-io/nats.go"
 )
 
@@ -40,11 +41,11 @@ func GetConfig(cfg string) (db *sqlx.DB, r WebConfig, err error) {
 		return
 	}
 
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+	sqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		r.Host, r.Port, r.User, r.Pass, r.DBName)
 
-	db, err = sqlx.Connect("postgres", psqlInfo)
+	db, err = sqlx.Connect("mysql", sqlInfo)
 	if err != nil {
 		return
 	}
