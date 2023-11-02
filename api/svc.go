@@ -55,7 +55,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 				var p rmm.PublicIPNats
 				if err := dec.Decode(&p); err == nil {
 					logger.Debugln("Public IP", p)
-					stmt := `UPDATE agents SET public_ip=$1 WHERE agents_agent.agent_id=$2;`
+					stmt := `UPDATE agents SET public_ip=$1 WHERE agents.agent_id=$2;`
 					_, err = db.Exec(stmt, p.PublicIP, p.AgentId)
 					if err != nil {
 						logger.Errorln(err)
@@ -71,7 +71,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 						UPDATE agents
 						SET hostname=$1, operating_system=$2,
 						plat=$3, total_ram=$4, boot_time=$5, needs_reboot=$6, logged_in_username=$7
-						WHERE agents_agent.agent_id=$8;`
+						WHERE agents.agent_id=$8;`
 
 					logger.Debugln("Info", r)
 					_, err = db.Exec(stmt, r.Hostname, r.OS, r.Platform, r.TotalRAM, r.BootTime, r.RebootNeeded, r.Username, r.AgentId)
@@ -80,7 +80,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 					}
 
 					if r.Username != "None" {
-						stmt = `UPDATE agents SET last_logged_in_user=$1 WHERE agents_agent.agent_id=$2;`
+						stmt = `UPDATE agents SET last_logged_in_user=$1 WHERE agents.agent_id=$2;`
 						logger.Debugln("Updating last logged in user:", r.Username)
 						_, err = db.Exec(stmt, r.Username, r.AgentId)
 						if err != nil {
@@ -92,7 +92,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 
 		case "agent-disks":
 			go func() {
-				var r rmm.WinDisksNats
+				var r rmm.StorageNats
 				if err := dec.Decode(&r); err == nil {
 					logger.Debugln("Drives", r)
 					b, err := json.Marshal(r.Drives)
@@ -100,7 +100,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 						logger.Errorln(err)
 						return
 					}
-					stmt := `UPDATE agents SET disks=$1 WHERE agents_agent.agent_id=$2;`
+					stmt := `UPDATE agents SET disks=$1 WHERE agents.agent_id=$2;`
 
 					_, err = db.Exec(stmt, b, r.AgentId)
 					if err != nil {
@@ -120,7 +120,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 						return
 					}
 
-					stmt := `UPDATE agents SET services=$1 WHERE agents_agent.agent_id=$2;`
+					stmt := `UPDATE agents SET services=$1 WHERE agents.agent_id=$2;`
 
 					_, err = db.Exec(stmt, b, r.AgentId)
 					if err != nil {
@@ -139,7 +139,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 						logger.Errorln(err)
 						return
 					}
-					stmt := `UPDATE agents SET wmi_detail=$1 WHERE agents_agent.agent_id=$2;`
+					stmt := `UPDATE agents SET wmi_detail=$1 WHERE agents.agent_id=$2;`
 
 					_, err = db.Exec(stmt, b, r.AgentId)
 					if err != nil {
