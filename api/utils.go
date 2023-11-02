@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"time"
 
@@ -35,14 +34,13 @@ func GetConfig(cfg string) (db *sqlx.DB, r WebConfig, err error) {
 		}
 	}
 
-	jret, _ := ioutil.ReadFile(cfg)
+	jret, _ := os.ReadFile(cfg)
 	err = json.Unmarshal(jret, &r)
 	if err != nil {
 		return
 	}
 
-	sqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
+	sqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		r.Host, r.Port, r.User, r.Pass, r.DBName)
 
 	db, err = sqlx.Connect("mysql", sqlInfo)
