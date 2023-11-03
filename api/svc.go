@@ -129,7 +129,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 				}
 			}()
 
-		case "agent-wmi":
+		case "agent-sysinfo": // was "agent-wmi"
 			go func() {
 				var r rmm.WinWMINats
 				if err := dec.Decode(&r); err == nil {
