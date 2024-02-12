@@ -70,11 +70,11 @@ func Svc(logger *logrus.Logger, cfg string) {
 					stmt := `
 						UPDATE agents
 						SET hostname=$1, operating_system=$2,
-						plat=$3, total_ram=$4, boot_time=$5, needs_reboot=$6, logged_in_username=$7
+						plat=$3, total_ram=$4, boot_time=$5, reboot_pending=$6, logged_in_username=$7
 						WHERE agents.agent_id=$8;`
 
 					logger.Debugln("Info", r)
-					_, err = db.Exec(stmt, r.Hostname, r.OS, r.Platform, r.TotalRAM, r.BootTime, r.RebootNeeded, r.Username, r.AgentId)
+					_, err = db.Exec(stmt, r.Hostname, r.OS, r.Platform, r.TotalRAM, r.BootTime, r.RebootPending, r.Username, r.AgentId)
 					if err != nil {
 						logger.Errorln(err)
 					}
