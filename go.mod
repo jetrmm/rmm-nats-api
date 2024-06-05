@@ -8,7 +8,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/nats-io/nats.go v1.35.0
 	github.com/sirupsen/logrus v1.9.3
-	github.com/ugorji/go/codec v1.2.11
+	github.com/ugorji/go/codec v1.2.12
 )
 
 require (
