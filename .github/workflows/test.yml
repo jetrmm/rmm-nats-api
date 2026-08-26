@@ -1,0 +1,23 @@
+name: test.yml
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main", "dev-*" ]
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version: stable
+
+      - name: Test
+        run: go test -v
