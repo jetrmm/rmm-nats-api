@@ -3,7 +3,7 @@ module github.com/jetrmm/rmm-nats-api
 go 1.25.0
 
 require (
-	github.com/go-sql-driver/mysql v1.10.0
+	github.com/go-sql-driver/mysql v1.10.1
 	github.com/jetrmm/rmm-shared v0.0.0-20240212170546-6d5b5200d7c1
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/nats-io/nats.go v1.53.1
